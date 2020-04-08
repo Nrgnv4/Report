@@ -1,0 +1,129 @@
+{% extends "page.html" %}
+{% block page_body%}
+
+
+{% for key, branch  in tree.items() %}
+    <h3 class="w3-container w3-theme-l1">{{branch['change_name']}}</h3>
+    {% for full_path, params in branch['scopes_paths'].items() %}
+<!-- <div class="w3-container" >
+    <form action="settings" method="POST">
+        <input class="w3-input w3-border w3-hover-border-theme w3-border-theme w3-round w3-col" style="width:20%" name="level_1" type="text" autocomplete="off" value="">            
+        <input class="w3-input w3-border w3-hover-border-theme w3-border-theme w3-round w3-col" style="width:20%" name="level_2" type="text" autocomplete="off" value="">      
+        <select class="w3-input w3-select w3-border" name="option">
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+        <input class="w3-input w3-border w3-hover-border-theme w3-border-theme w3-round w3-col" style="width:20%" name="level_3" type="text" autocomplete="off" value="">
+        <input class="w3-input w3-border w3-hover-border-theme w3-border-theme w3-round w3-col" style="width:20%" name="level_4" type="text" autocomplete="off" value="">
+
+        <div class="w3-dropdown-hover" style="width:20%">
+            <button style="padding: 8px" class=" w3-button w3-theme  w3-round w3-col" >Параметры</button>
+            <div class="w3-dropdown-content w3-bar-block w3-card w3-light-grey w3-round" id="myDIV">
+                <input class="w3-input w3-padding" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                <div class="w3-padding w3-hover-theme">
+                        <input class="w3-check" name= "push-{{setting}}" type="checkbox">
+                        <label class="w3-margin">{{setting}}</label>
+                </div>
+            </div>
+        </div>
+        <button class="w3-button w3-theme-l4 w3-hover-theme w3-half" action="submit" name="parameters" value="add">Добавить</button>
+        <button class="w3-button w3-theme-l3 w3-hover-theme w3-half" action="submit" name="parameters" value="del">Удалить</button>
+    </form>
+</div> -->
+
+<div class="w3-card w3-margin" >
+    <div class="w3-container " >
+        <h4 class="w3-border-bottom w3-round-large w3-bottombar w3-text-theme w3-hover-border-theme " onclick="myFunction('{{full_path}}')">{{full_path}}</h4>
+            {% if params['tags']!="" %}
+                {% for tags in params['tags']%}
+                    {% if tags!="" %}
+                        <div class="w3-tag w3-round-large w3-blue w3-center" style="margin-bottom: 5px">
+                                #{{tags}}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if params['parameters']['test']!="" %}
+                <div class="w3-tag w3-teal w3-center" style="margin-bottom: 5px">
+                    {{params['parameters']['test']}}
+                </div>  
+            {% endif %}
+
+            {% if params['parameters']['regulator']!="" %}
+                <div class="w3-tag w3-teal w3-center" style="margin-bottom: 5px">
+                    {{params['parameters']['regulator']}}{{params['parameters']['channel']}}
+                </div>
+            {% endif %}
+
+            {% if params['parameters']['pulse']!="" %}
+                <div class="w3-tag w3-teal w3-center" style="margin-bottom: 5px">
+                    {{params['parameters']['pulse']}}{{params['parameters']['pulse_time']}}
+                </div>
+            {% endif %}
+
+            {% if params['parameters']['tunes']!=[] %}
+                {% for tune in params['parameters']['tunes']%}
+                    <div class="w3-tag w3-teal w3-center" style="margin-bottom: 5px">
+                        {{tune}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if params['parameters']['set_']!="" %}
+                <div class="w3-tag w3-round-large w3-red w3-center" style="margin-bottom: 5px">
+                    {{params['parameters']['set_']}}
+                </div>
+            {% endif %}
+    <p></p>
+
+
+
+    </div>
+    <div id="{{full_path}}" class="w3-container w3-hide">
+        {% if params['checked']!="" %}
+        {% for checked, add_checked in params['checked'].items()%}
+        <div class="w3-quarter w3-padding">
+            <input class="w3-check" name= "push-{{checked}}" type="checkbox" checked="checked" disabled>
+            <label class="w3-margin">{{checked}}
+                {% if add_checked != "" %}
+                    + {{add_checked}}
+                {% endif %}
+            </label>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+
+        {% if params['not_checked']!="" %}
+        {% for not_checked in params['not_checked']%}
+        <div class="w3-quarter w3-padding">
+            <input class="w3-check" name= "push-{{not_checked}}" type="checkbox" disabled>
+            <label class="w3-margin">{{not_checked}}</label>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if params['img']!=None %}
+        <br>
+        <div class="w3-padding">
+            <img style="width:90%" src="/{{params['img']}}">
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endfor %}
+{% endfor %}
+
+<div class="w3-row" style="padding-bottom: 20px">
+    <div class="w3-container w3-quarter"></div>
+    <a href="/scopes" style="text-decoration: none">
+        <div class="w3-button w3-theme-d3 w3-center w3-margin w3-half">
+            Всё ок, давай дальше!
+        </div>
+    </a>
+</div>
+{% endblock %}

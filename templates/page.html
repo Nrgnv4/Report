@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<title>{{title}}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+
+
+<link rel="stylesheet" href="static/w3.css">
+<link rel="stylesheet" href="static/w3-theme-blue-grey.css">
+<script src="static/scripts.js"></script>
+<script src="static/jquery-3.4.1.min.js"></script>
+<body>
+
+  <!-- Links (sit on top) -->
+  <div class="w3-top ">
+    <div class="w3-row w3-large w3-theme-d5 ">
+      <div class="w3-col s3">
+        <a href="/" class="w3-button w3-block w3-hover-theme">Шаг 1: Проверка настроек</a>
+      </div>
+      <div class="w3-col s3">
+        <a href="/tree" class="w3-button w3-block w3-hover-theme">Шаг 2: Создание дерева протокола</a>
+      </div>
+      <div class="w3-col s3">
+        <a href="/scopes" class="w3-button w3-block w3-hover-theme">Шаг 3: Создание картинок осциллограмм</a>
+      </div>
+      <div class="w3-col s3">
+        <a href="/protocol" class="w3-button w3-block w3-hover-theme">Шаг 4: </a>
+      </div>
+    </div>
+  </div>
+  <div class="w3-container" style= "margin-top:46px"">
+  {% block page_body %}
+  {% endblock %}
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "page.html" %}
+{% block page_body%}
+
+<div class="w3-display-middle">
+    <div class="w3-center" id="timer_block">
+        <img src="/static/wait_60x60.png" class="w3-center w3-hide" id="wait" style="width: 100px">
+        <h3 id="timer"></h3>
+        <button class="w3-button w3-green" id="Start" onclick="make_images();">Начать создание картинок осциллограмм</button> 
+    </div>
+    <div class="w3-hide" id="OKbut">
+        <a href="#protocol" style="text-decoration: none">
+            <div class="w3-button w3-theme-d3 ">
+                Всё ок, давай дальше!
+            </div>
+        </a>
+        <a href="/tree" style="text-decoration: none">
+            <div class="w3-button w3-red ">
+                ←
+            </div>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

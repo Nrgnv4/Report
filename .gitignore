@@ -1,0 +1,7 @@
+*.log
+*.tmp
+__pycache__/
+static/Испытания
+static/Испытания?
+.idea/
+python-docx-master.zip

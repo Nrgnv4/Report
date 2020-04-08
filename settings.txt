@@ -1,0 +1,6 @@
+{
+    "DELETE_EMPTY_DIGITAL_SIGNALS": 1,
+    "IMAGE_DPI": 200,
+    "IMAGE_TRANSPARENT": 0,
+    "IMAGE_FILENAME": "scope.png"
+}
