@@ -29,7 +29,8 @@ def index():
 
         if 'fix' in request.form:
             a = {
-                'IMAGE_DPI': int(request.form['dpi'])
+                'IMAGE_DPI': int(request.form['dpi']),
+                'NUM_START': int(request.form['num_start'])
             }
         main.Helper().rewrite_settings(**a)
 

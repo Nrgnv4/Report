@@ -433,7 +433,7 @@ class Tree():
     def make_tree(self):
 
         # Начальный номер рисунка
-        self.num = 1
+        self.num = Helper().read_settings()['NUM_START']
 
         logging.info('start make tree')
 
