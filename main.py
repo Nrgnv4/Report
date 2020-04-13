@@ -1,14 +1,15 @@
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from Comtrade import ComtradeRecord
-
-# import settings as s
 import os
 import json
 import logging
 import re
 import random
+
+# import settings as s
+matplotlib.use('Agg')
+
 
 logging.basicConfig(
   format=u'%(levelname)-8s [%(filename)-12s:%(lineno)-4d # %(asctime)s] %(message)s',
@@ -335,7 +336,7 @@ class Tree():
 
         # получение тюнсов
         self.tunes = self.get_tunes()
- 
+
         # проверка всех путей проекта на наличие точек отличных от расширения
         if self.check_excess_dots() != []:
             print(
@@ -343,6 +344,7 @@ class Tree():
               self.check_excess_dots())
 
         self.make_tree()
+
 
 
         # print(self.make_tree())
@@ -430,6 +432,9 @@ class Tree():
 
     def make_tree(self):
 
+        # Начальный номер рисунка
+        self.num = 1
+
         logging.info('start make tree')
 
         tree = self.get_headers()
@@ -467,6 +472,9 @@ class Tree():
 
                     parameters = self.get_all_params_from_path(
                         self.addreses[path]['path'])
+
+                    signature = self.signature(parameters)
+
                     tree[header]['scopes_paths'].update(
                         {path: {
                             'path': self.addreses[path]['path'],
@@ -475,7 +483,8 @@ class Tree():
                             'checked': get_list_part(cp, 1)[0],
                             'not_checked': not_checked(cp),
                             'img': check_img(path),
-                            'parameters': parameters
+                            'parameters': parameters,
+                            'signature': signature
                             }
                         }
                     )
@@ -530,7 +539,7 @@ class Tree():
 
         # обработка переходов
         if test == 'переходы':
-            jump = re.search(fr'(?:\d_)*(\w+\d\b\s*(-\s*\w+\d\b)+)',
+            jump = re.search(fr'(?:\d+_)*(\w+\d\b\s*(-\s*\w+\d\b)+)',
                 path, flags=re.IGNORECASE)
             regulator = jump[1]
             channel = ''
@@ -658,104 +667,102 @@ class Tree():
 
         return [change_str(i) for i in data_list]
 
+    def signature(self, parameters):
 
+        replacements = self.standard_settings['replacements']
+
+        regulator = replacements[parameters['regulator']]
+        test = f"f\"{replacements[parameters['test']]}\""
+        channel = parameters['channel']
+        pulse = parameters['pulse']
+
+
+        if parameters['regulator'] == 'AVR':
+            key_parameter = 'Ug'
+        elif parameters['regulator'] == 'ECR':
+            key_parameter = 'Ie'
+        elif parameters['regulator'] == 'CosPhi':
+            key_parameter = 'CosPhi'
+        elif parameters['regulator'] == 'Qg':
+            key_parameter = 'Qg'
+
+        if  parameters['pulse_time']:
+            pulse_time = f" длительностью {parameters['pulse_time']}."
+        else:
+            pulse_time = "." 
+
+        if parameters['tunes']:
+            tunes = ", ".join(parameters['tunes'])
+
+        if parameters['set_'] :
+            set_ = f"\n\nВ результате проверки установлены следующие параметры: {tunes}"
+        else:
+            set_ = ""
+
+        body = f"Рисунок {self.num} - {eval(test)}{set_}"
+
+        # print(body,parameters)
+
+        self.num += 1 
+
+        return body 
+
+
+# Class Protocol не используется
 class Protocol():
     """docstring for Protocol"""
     def __init__(self, start=1):
+        # чтение настроек, для каких осциллограмм какие параметры выбирать
+        self.settings = Helper().load_json('standard_settings.json')
 
         # точка начала нумерации рисунков
-        self.start = start
+        num = start
 
         # Загружаем сгенерированное дерево
         self.tree = Helper().load_json('./tree.tmp')
 
+        for i,j in self.tree.items():
+            for k,l in j['scopes_paths'].items():
+                parameters = l['parameters']
+
+                replacements = self.settings['replacements']
+
+                regulator = replacements[parameters['regulator']]
+                test = f"f\"{replacements[parameters['test']]}\""
+                channel = parameters['channel']
+                pulse = parameters['pulse']
 
 
-    def make_template(self):
-        Template = f"Рисунок {num} – Осциллограмма параметров системы возбуждения в процессе {test} при скачкообразном изменении уставки {pulse}. В работе {channel} канал.  {set_}"
 
 
-            
+                if parameters['regulator'] == 'AVR':
+                    key_parameter = 'Ug'
+                elif parameters['regulator'] == 'ECR':
+                    key_parameter = 'Ie'
+
+                if  parameters['pulse_time']:
+                    pulse_time = f"длительностью {parameters['pulse_time']}."
+                else:
+                    pulse_time = "." 
+
+                if parameters['tunes']:
+                    tunes = ", ".join(parameters['tunes'])
+
+                if parameters['set_'] :
+                    set_ = f"\n\nВ результате проверки установлены следующие параметры: {tunes}"
+                else:
+                    set_ = ""
+
+                body = f"Рисунок {num} - {eval(test)} {set_}"
+                
+                print(body,parameters)
+
+                num += 1 
+
+    def make_template(self, **parameters):
+        Template = f"Рисунок {parameters['num']} – Осциллограмма параметров системы возбуждения в процессе {parameters['test']} при скачкообразном изменении уставки {parameters['pulse']} длительностью {parameters['pulse_time']}. В работе {parameters['channel']} канал.  {parameters['set_']}"
 
 
-
-class TmpAnalysis():
-    """docstring for Analyses"""
-    def __init__(self, path):
-        self.standard_settings = Helper().load_json('standard_settings.json')
-        self.replacements = Helper().load_json('header_replacements.json')
-        print(self.get_all_params_from_path(path))
-
-    def get_all_params_from_path(self, path):
-        upper_path = path.upper()
-
-        def check_in_path(type_):
-            for i in self.standard_settings[type_]:
-                if i.upper() in upper_path:
-                    return i
-            return ''
-
-        # определение типа испытаний
-        test = check_in_path('test')
-        if test == '':
-            if 'ТОЛЧ' in upper_path:
-                test = 'Проверка устойчивости'
-
-
-        # определение регулятора и канала
-        regulator = check_in_path('regulator')
-        if regulator != '':
-            channel = re.search(fr'{regulator}(\d)', path, flags=re.IGNORECASE)
-            if channel:
-                channel = channel[1]
-            # замена на AVR и ECR
-            reg_upper = regulator.upper()
-            if reg_upper in self.replacements['regulators']:
-                regulator = self.replacements['regulators'][reg_upper]
-        else:
-            channel = ''
-
-        # обработка переходов
-        if test == 'переходы':
-            jump = re.search(fr'(?:\d_)*(\w+\d\b\s*-\s*\w+\d\b)', path,
-                                flags = re.IGNORECASE)
-            regulator = jump[1]
-            channel = ''
-
-        # определение амплитуды толчка
-        pulse = re.search(r'[+,-]\d+%(?:\s*\D+\b)*[$]*', path)
-        if pulse:
-            pulse = pulse[0].strip()
-        else:
-            pulse = ''
-
-        # определение длиельности толчка
-        pulse_time = re.search(r'\d+\s*(сек|sec)', path)
-        if pulse_time:
-            pulse_time = pulse_time[0]
-        else:
-            pulse_time = ''
-
-        # определение параметров, записанных в пути 
-        tunes = re.findall(r'[TТ]\d+\s*\w+?\s*=\s*[\d,]+', path)
-        if '_set'.upper() in upper_path:
-            set_ = 'set'
-        else:
-            set_ = ''
-
-        # формирование выходного словаря 
-        output = {
-            'path': path,
-            'test': test,
-            'regulator': regulator,
-            'channel': channel,
-            'pulse': pulse,
-            'pulse_time': pulse_time,
-            'tunes': tunes,
-            'set_': set_
-        }
-
-        return output
 
 
 
@@ -764,7 +771,7 @@ def main():
     # Scope(choice, './static/Испытания/1_ХХ/4_Ограничители/1_AVR2 ОМТВВ +10% 6 сек T652=0,33/avr92log575_V829.cfg')
     # Scope(choice,'./avr92log567_V829.cfg')
     # Tree()
-    Protocol()
+    # Protocol()
     # a = Tree().tmp()
     # for i in a:
     #     Analysis(i)
