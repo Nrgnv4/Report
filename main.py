@@ -566,9 +566,14 @@ class Tree():
             if self.tunes is not None and p_list[0][1:] in self.tunes:
                 p_list.insert(1, self.tunes[p_list[0][1:]])
                 new_param = p_list[0] + p_list[1] + ' = ' + p_list[2]
-                return new_param
-            else:
-                return parameter
+                parameter = new_param
+
+            # удаление запятой после тюнса
+            if parameter.endswith(','):
+                parameter = parameter[:-1]
+
+            return parameter
+
 
         if tunes is not None:
             tunes = [add_tunes_name(i) for i in tunes]
