@@ -692,12 +692,14 @@ class Tree():
             key_parameter = 'Qg'
 
         if  parameters['pulse_time']:
-            pulse_time = f" длительностью {parameters['pulse_time']}."
+            pulse_time = f" длительностью {parameters['pulse_time']}"
         else:
-            pulse_time = "." 
+            pulse_time = "" 
 
         if parameters['tunes']:
             tunes = ", ".join(parameters['tunes'])
+        else:
+            tunes = ""
 
         if parameters['set_'] :
             set_ = f"\n\nВ результате проверки установлены следующие параметры: {tunes}"
