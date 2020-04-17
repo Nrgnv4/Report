@@ -1,0 +1,26 @@
+{% extends "page_without_menu.html" %}
+{% block page_body%}
+
+{% for key, branch  in tree.items() %}
+    <h2 class="w3-container w3-theme-l1">{{branch['change_name']}}</h2>
+    {% for full_path, params in branch['scopes_paths'].items() %}
+
+<div >
+    <div id="{{full_path}}" >
+        {% if params['img']!=None %}
+        <br>
+        <div class="w3-padding">
+            <img src="/{{params['img']}}">
+        </div>
+        {% endif %}
+
+        {% if params['signature']!="" %}
+                {{params['signature']}}
+        {% endif %}
+    </div>
+</div>
+
+{% endfor %}
+{% endfor %}
+
+{% endblock %}
