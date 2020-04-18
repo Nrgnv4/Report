@@ -83,9 +83,9 @@ class Scope():
         # формирование выбранных сигналов self.choosen_signals
         self.analogs_select(choice)
 
-        # фаормирование макета осциллограммы
+        # формирование макета осциллограммы
         self.prepare_figure()
-        
+
         # формирование и размещение на макете всех сигналов
         self.add_analogs()
         if self.comtrade:
@@ -323,6 +323,10 @@ class Tree():
 
     # Используется именно static/... т.к только там можно разместить картинки для превью
     def __init__(self, PROJECT_PATH='static/Испытания'):
+
+        # наличие лишних точек в пути 
+        self.dots = 0
+
         self.PROJECT_PATH = PROJECT_PATH
 
         # чтение настроек, для каких осциллограмм какие параметры выбирать
@@ -331,17 +335,23 @@ class Tree():
         # получение списка файлов и папок проекта и добавление их в self.project_walk
         self.scan_project()
 
+        # замена лишних точек в имени файлов
+        self.replace_dots_in_filenames()
+
+        # замена лишних точек в имени папок
+        self.replace_dots_in_foldernames()
+
+        if self.dots == 1:
+            # пересканирование проекта
+            self.scan_project()
+            logging.info(f'Проект пересканирован')
+
         # получение всех путей к файлам проекта
         self.all_paths = self.get_all_paths()
 
         # получение тюнсов
         self.tunes = self.get_tunes()
 
-        # проверка всех путей проекта на наличие точек отличных от расширения
-        if self.check_excess_dots() != []:
-            print(
-              'Проверьте путь на наличие точек отличных от точки расширения.',
-              self.check_excess_dots())
 
         self.make_tree()
 
@@ -366,6 +376,61 @@ class Tree():
         return: project_walk
         """
         self.project_walk = list(os.walk(self.PROJECT_PATH))
+
+    def replace_dots_in_filenames(self):
+        """Переименовывает файлы, где есть лишние точки в 
+        имени, отличные от расширения
+
+        """
+        for paths in self.project_walk:
+            for file in paths[2]:
+                if file.count('.') > 1:
+                    # корректировка пути
+                    path = paths[0].replace('\\','/')
+
+                    # формирование пути к файлу
+                    old_path = f'{path}/{file}'
+
+                    # формирование нового имени файла
+                    new_filename = file[:-4].replace('.', '_')+ file[-4:]
+
+                    # формирование нового пути 
+                    new_path = f'{path}/{new_filename}'
+
+                    # переименование
+                    os.rename(old_path, new_path)
+
+                    logging.warning(f'Файл {path} переименован в {new_path}')
+
+                    self.dots = 1
+
+    def replace_dots_in_foldernames(self):
+        """Переименовывает папки, где есть точки
+
+        """
+        for paths in reversed(self.project_walk):
+            for folder in paths[1]:
+                if folder.count('.') > 0:
+
+                    # корректировка пути
+                    path = paths[0].replace('\\','/')
+
+                    # формирование пути к папке
+                    old_path = f'{path}/{folder}'
+
+
+                    # формирование нового имени
+                    new_foldername = folder.replace('.', ',')
+
+                    # формирование нового пути к папке
+                    new_path = f'{path}/{new_foldername}'
+
+                    # переименование
+                    os.rename(old_path, new_path)
+
+                    logging.warning(f'Папка {old_path} переименована в {new_path}')
+
+                    self.dots = 1
 
     def get_tunes(self):
         """ Берет файл tunes.txt в файле проекта испытаний и возвращает
@@ -713,6 +778,7 @@ class Tree():
         self.num += 1 
 
         return body 
+
 
 
 # Class Protocol не используется
