@@ -6,14 +6,16 @@ import json
 import logging
 import re
 import random
+from docx import Document
+from docx.shared import Cm
 
 # import settings as s
 matplotlib.use('Agg')
 
 
 logging.basicConfig(
-  format=u'%(levelname)-8s [%(filename)-12s:%(lineno)-4d # %(asctime)s] %(message)s',
-  level=logging.INFO, filename='sample.log')
+    format=u'%(levelname)-8s [%(filename)-12s:%(lineno)-4d # %(asctime)s] %(message)s',
+    level=logging.INFO, filename='sample.log')
 
 logging.info('Start!')
 
@@ -91,13 +93,13 @@ class Scope():
         if self.comtrade:
             self.add_digitals()
 
-        # добавление подписи по "y" 
+        # добавление подписи по "y"
         plt.xlabel('t,сек', fontsize=7, rotation=0)
 
         # plt.savefig(f'{path_to_save}{s.IMAGE_FILENAME}',
         #     transparent=self.global_settings['IMAGE_TRANSPARENT'])
 
-        # сохранение файла в png 
+        # сохранение файла в png
         plt.savefig(path_to_file[:-3],
                     transparent=self.global_settings['IMAGE_TRANSPARENT'])
         plt.close()
@@ -139,9 +141,9 @@ class Scope():
         # макет формируется из строк: 3 строки на аналог, 1 строка на дискрет
         rows = len(self.choosen_signals) * \
             3 + len(self.digitals) + 1
-        
-        # 
-        self.fig = plt.figure(dpi=self.global_settings['IMAGE_DPI'], 
+
+        #
+        self.fig = plt.figure(dpi=self.global_settings['IMAGE_DPI'],
                               figsize=(8, rows * 0.3))
 
         # отступы от края в зависимости от типа файлов
@@ -184,7 +186,7 @@ class Scope():
                     label = signal
                     ylabel = label + f', pu'
 
-                return {'num': num, 
+                return {'num': num,
                         'label': label,
                         'ylabel': ylabel
                         }
@@ -195,8 +197,8 @@ class Scope():
             # если есть дополнительный сигнал в выбранных
             if self.choice[signal] != '':
                 # добавляем первый сигнал на участок осциллограммы
-                ax.plot(self.time, 
-                        self.analog_data(s_1['num']), 
+                ax.plot(self.time,
+                        self.analog_data(s_1['num']),
                         linewidth=0.8,
                         label=s_1['label']
                         )
@@ -205,11 +207,11 @@ class Scope():
                 s_2 = get_num_label_legend(self.choice[signal])
 
                 # если второй сигнал есть в исходном файле, то добавлем его на участок
-                if s_2 !='err':
+                if s_2 != 'err':
                     ax.plot(self.time,
                             self.analog_data(s_2['num']),
                             linewidth=0.8,
-                            ls='--', 
+                            ls='--',
                             label=s_2['label']
                             )
                     ax.legend(loc=0, fontsize='xx-small')
@@ -222,12 +224,12 @@ class Scope():
                         )
 
             ax.tick_params(
-                axis='y', 
+                axis='y',
                 labelsize=6,
                 length=0,
                 pad=3,
                 grid_alpha=0.4)
-            ax.tick_params(axis='x', labelsize=6, grid_alpha=0.4 )
+            ax.tick_params(axis='x', labelsize=6, grid_alpha=0.4)
             plt.ylabel(s_1['ylabel'],
                        fontsize=7,
                        rotation=0,
@@ -245,7 +247,7 @@ class Scope():
                 self.gs[start_point + j:start_point + j + 1, 0], ylim=[-0.3, 1.3])
             j += 1
             ax.plot(self.time,
-                    self.comtrade.getDigitalChannelData(i), 
+                    self.comtrade.getDigitalChannelData(i),
                     linewidth=0.8)
             ax.set_yticklabels('')
             ax.tick_params(axis='both', labelsize=6, length=0)
@@ -296,6 +298,7 @@ class Scope():
 
 class Helper():
     """docstring for Helper"""
+
     def __init__(self):
         pass
 
@@ -324,7 +327,7 @@ class Tree():
     # Используется именно static/... т.к только там можно разместить картинки для превью
     def __init__(self, PROJECT_PATH='static/Испытания'):
 
-        # наличие лишних точек в пути 
+        # наличие лишних точек в пути
         self.dots = 0
 
         self.PROJECT_PATH = PROJECT_PATH
@@ -352,10 +355,7 @@ class Tree():
         # получение тюнсов
         self.tunes = self.get_tunes()
 
-
         self.make_tree()
-
-
 
         # print(self.make_tree())
         # self.make_tree()
@@ -371,6 +371,7 @@ class Tree():
         # print(self.tests_list[140])
 
     ########### Подготовка ##############
+
     def scan_project(self):
         """Сканирует папку с проектом
         return: project_walk
@@ -386,15 +387,15 @@ class Tree():
             for file in paths[2]:
                 if file.count('.') > 1:
                     # корректировка пути
-                    path = paths[0].replace('\\','/')
+                    path = paths[0].replace('\\', '/')
 
                     # формирование пути к файлу
                     old_path = f'{path}/{file}'
 
                     # формирование нового имени файла
-                    new_filename = file[:-4].replace('.', '_')+ file[-4:]
+                    new_filename = file[:-4].replace('.', '_') + file[-4:]
 
-                    # формирование нового пути 
+                    # формирование нового пути
                     new_path = f'{path}/{new_filename}'
 
                     # переименование
@@ -413,11 +414,10 @@ class Tree():
                 if folder.count('.') > 0:
 
                     # корректировка пути
-                    path = paths[0].replace('\\','/')
+                    path = paths[0].replace('\\', '/')
 
                     # формирование пути к папке
                     old_path = f'{path}/{folder}'
-
 
                     # формирование нового имени
                     new_foldername = folder.replace('.', ',')
@@ -428,7 +428,8 @@ class Tree():
                     # переименование
                     os.rename(old_path, new_path)
 
-                    logging.warning(f'Папка {old_path} переименована в {new_path}')
+                    logging.warning(
+                        f'Папка {old_path} переименована в {new_path}')
 
                     self.dots = 1
 
@@ -449,7 +450,7 @@ class Tree():
 
         if os.path.exists(tunes_path):
             with open(tunes_path, 'r') as f:
-                body ={}
+                body = {}
                 first_line = f.readline().replace('\n', '')
                 second_line = f.readline().replace('\n', '')
                 head = [first_line, second_line]
@@ -487,8 +488,6 @@ class Tree():
 
     #####################################
 
-
-
     def make_images(self):
         tree = Helper().load_json('checked.tmp')
         for i in self.addreses:
@@ -523,7 +522,7 @@ class Tree():
                         if x is not None:
                             j = list(x[1][0].keys())
                             difference = all_parameters - set(j)
-                            output = {i:"" for i in difference}
+                            output = {i: "" for i in difference}
                             return output
                             # return all_parameters - set(j)
 
@@ -533,7 +532,7 @@ class Tree():
                     def check_img(path):
                         path = path[:-3] + "png"
                         if os.path.exists(path):
-                            return path+f"?r={random.random()}"
+                            return path + f"?r={random.random()}"
 
                     parameters = self.get_all_params_from_path(
                         self.addreses[path]['path'])
@@ -550,11 +549,11 @@ class Tree():
                             'img': check_img(path),
                             'parameters': parameters,
                             'signature': signature
-                            }
+                        }
                         }
                     )
 
-                    checked_for_images.update({path:get_list_part(cp, 1)[0]})
+                    checked_for_images.update({path: get_list_part(cp, 1)[0]})
         Helper().write_json(checked_for_images, "checked.tmp")
         Helper().write_json(tree, "tree.tmp")
         logging.info('Tree is ready!')
@@ -571,7 +570,7 @@ class Tree():
                         return j, dictionary[i]
         a = recursive_find(path, self.standard_settings)
         # if a is not None:
-            # return a[0]
+        # return a[0]
         return a
 
     def get_all_params_from_path(self, path):
@@ -605,7 +604,7 @@ class Tree():
         # обработка переходов
         if test == 'переходы':
             jump = re.search(fr'(?:\d+_)*(\w+\d\b\s*(-\s*\w+\d\b)+)',
-                path, flags=re.IGNORECASE)
+                             path, flags=re.IGNORECASE)
             regulator = jump[1]
             channel = ''
 
@@ -623,8 +622,9 @@ class Tree():
         else:
             pulse_time = ''
 
-        # определение параметров, записанных в пути 
+        # определение параметров, записанных в пути
         tunes = re.findall(r'[TТ]\d+\s*\w+?\s*=\s*[\d,]+', path)
+
         def add_tunes_name(parameter):
             p_list = parameter.split('=')
 
@@ -639,7 +639,6 @@ class Tree():
 
             return parameter
 
-
         if tunes is not None:
             tunes = [add_tunes_name(i) for i in tunes]
         if '_set'.upper() in upper_path:
@@ -647,7 +646,7 @@ class Tree():
         else:
             set_ = ''
 
-        # формирование выходного словаря 
+        # формирование выходного словаря
         output = {
             'test': test,
             'regulator': regulator,
@@ -746,7 +745,6 @@ class Tree():
         channel = parameters['channel']
         pulse = parameters['pulse']
 
-
         if parameters['regulator'] == 'AVR':
             key_parameter = 'Ug'
         elif parameters['regulator'] == 'ECR':
@@ -756,17 +754,17 @@ class Tree():
         elif parameters['regulator'] == 'Qg':
             key_parameter = 'Qg'
 
-        if  parameters['pulse_time']:
+        if parameters['pulse_time']:
             pulse_time = f" длительностью {parameters['pulse_time']}"
         else:
-            pulse_time = "" 
+            pulse_time = ""
 
         if parameters['tunes']:
             tunes = ", ".join(parameters['tunes'])
         else:
             tunes = ""
 
-        if parameters['set_'] :
+        if parameters['set_']:
             set_ = f"\n\nВ результате проверки установлены следующие параметры: {tunes}"
         else:
             set_ = ""
@@ -775,68 +773,28 @@ class Tree():
 
         # print(body,parameters)
 
-        self.num += 1 
+        self.num += 1
 
-        return body 
-
-
-
-# Class Protocol не используется
-class Protocol():
-    """docstring for Protocol"""
-    def __init__(self, start=1):
-        # чтение настроек, для каких осциллограмм какие параметры выбирать
-        self.settings = Helper().load_json('standard_settings.json')
-
-        # точка начала нумерации рисунков
-        num = start
-
-        # Загружаем сгенерированное дерево
-        self.tree = Helper().load_json('./tree.tmp')
-
-        for i,j in self.tree.items():
-            for k,l in j['scopes_paths'].items():
-                parameters = l['parameters']
-
-                replacements = self.settings['replacements']
-
-                regulator = replacements[parameters['regulator']]
-                test = f"f\"{replacements[parameters['test']]}\""
-                channel = parameters['channel']
-                pulse = parameters['pulse']
+        return body
 
 
+def make_protocol():
+    tree = Helper().load_json('tree.tmp')
+    document = Document('template.docx')
 
+    for key, branch in tree.items():
+        document.add_heading(branch['change_name'], 0)
+        for full_path, params in branch['scopes_paths'].items():
 
-                if parameters['regulator'] == 'AVR':
-                    key_parameter = 'Ug'
-                elif parameters['regulator'] == 'ECR':
-                    key_parameter = 'Ie'
+            if params['img'] is not None:
+                img_path = params['img'].split("?r=")[0]
+                document.add_picture(f"./{img_path}", width=Cm(16))
 
-                if  parameters['pulse_time']:
-                    pulse_time = f"длительностью {parameters['pulse_time']}."
-                else:
-                    pulse_time = "." 
+            if params['signature'] != "":
+                document.add_paragraph(params['signature'])
+                document.add_paragraph('')
 
-                if parameters['tunes']:
-                    tunes = ", ".join(parameters['tunes'])
-
-                if parameters['set_'] :
-                    set_ = f"\n\nВ результате проверки установлены следующие параметры: {tunes}"
-                else:
-                    set_ = ""
-
-                body = f"Рисунок {num} - {eval(test)} {set_}"
-                
-                print(body,parameters)
-
-                num += 1 
-
-    def make_template(self, **parameters):
-        Template = f"Рисунок {parameters['num']} – Осциллограмма параметров системы возбуждения в процессе {parameters['test']} при скачкообразном изменении уставки {parameters['pulse']} длительностью {parameters['pulse_time']}. В работе {parameters['channel']} канал.  {parameters['set_']}"
-
-
-
+    document.save('./static/protocol.docx')
 
 
 def main():
@@ -849,7 +807,8 @@ def main():
     # for i in a:
     #     Analysis(i)
     # Analysis('Испытания/3_сеть 300 МВт/2_Толчки/1_АРВ1 pss off +3% 6 сек')
-    pass
+    make_protocol()
+
 
 if __name__ == '__main__':
     main()

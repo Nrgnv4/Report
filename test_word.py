@@ -15,7 +15,7 @@ p.add_run('italic.').italic = True
 #     'first item in unordered list', style='List Bullet'
 # )
 
-document.add_picture('scope.png', width=Cm(16))
+document.add_picture('_.png', width=Cm(16))
 
 records = (
     (3, '101', 'Spam'),
@@ -35,5 +35,5 @@ for qty, id, desc in records:
     row_cells[2].text = desc
 
 document.add_page_break()
-document.add_picture('scope.png', width=Cm(16))
+document.add_picture('_.png', width=Cm(16))
 document.save('demo.docx')

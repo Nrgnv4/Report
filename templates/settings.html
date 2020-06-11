@@ -5,77 +5,77 @@
 <div class="w3-card w3-margin" >
     <h3 class="w3-container w3-theme-l1">Настройки</h3>
         <div class="w3-container " >
-                    <div class="w3-container w3-card" style="padding: 0">
-                        <div class="w3-container w3-center w3-half w3-padding">
-                            Удалять пустые дискретные сигналы?
-                        </div>
-                        <button name="del_empty_digital_signals" value="1" 
-                            class="w3-button w3-quarter 
-                            {% if DELETE_EMPTY_DIGITAL_SIGNALS == 1 %}
-                                w3-red                           
-                            {% else %}
-                                w3-theme-l4
-                            {% endif %}
-                            " type="submit">
-                            Да
-                        </button>
-                        <button name="del_empty_digital_signals" value="0" class="w3-button w3-quarter
-                            {% if DELETE_EMPTY_DIGITAL_SIGNALS == 0 %}
-                                w3-green
-                            {% else %}
-                                w3-theme-l4
-                            {% endif %}
-                            " type="submit">
-                            Нет
-                        </button>
-                    </div>
-                    <p></p>
-                    <div class="w3-container w3-card"  style="padding: 0">
-                        <div class="w3-container w3-center w3-half w3-padding">
-                            Качество картинок осцилограмм:
-                        </div>
-                        <input class="w3-input w3-border w3-border-theme w3-round w3-col s2 " name="dpi" type="text" style="text-align: right;" autocomplete="off" value="{{IMAGE_DPI}}">
-                        <div class="w3-col s1 w3-container w3-left w3-padding">dpi</div>
-                        <button style="padding-bottom: 10px" class="w3-button w3-quarter w3-theme-l4" name="fix" value="0" type="submit">
-                            Fix
-                        </button>
-                    </div>
-                    <p></p>
-                    <div class="w3-container w3-card" style="padding: 0">
-                        <div class="w3-container w3-center w3-half w3-padding">
-                            Включить прозрачный фон каринок?
-                        </div>
-                        <button name="image_transparent" value="1" 
-                            class="w3-button w3-quarter 
-                            {% if IMAGE_TRANSPARENT == 1 %}
-                                w3-red                           
-                            {% else %}
-                                w3-theme-l4
-                            {% endif %}
-                            " type="submit">
-                            Да
-                        </button>
-                        <button name="image_transparent" value="0" class="w3-button w3-quarter
-                            {% if IMAGE_TRANSPARENT == 0 %}
-                                w3-green
-                            {% else %}
-                                w3-theme-l4
-                            {% endif %}
-                            " type="submit">
-                            Нет
-                        </button>
-                    </div>
-                    <p></p>
-                    <div class="w3-container w3-card"  style="padding: 0">
-                        <div class="w3-container w3-center w3-half w3-padding">
-                            Начало нумерации рисунков:
-                        </div>
-                        <input class="w3-input w3-border w3-border-theme w3-round w3-col s3 " name="num_start" type="text" style="text-align: right;" autocomplete="off" value="{{NUM_START}}">
-                        <button style="padding-bottom: 10px" class="w3-button w3-quarter w3-theme-l4" name="fix" value="0" type="submit">
-                            Fix
-                        </button>
-                    </div>
-                    <p></p>
+            <div class="w3-container w3-card" style="padding: 0">
+                <div class="w3-container w3-center w3-half w3-padding">
+                    Удалять пустые дискретные сигналы?
+                </div>
+                <button name="del_empty_digital_signals" value="1" 
+                    class="w3-button w3-quarter 
+                    {% if DELETE_EMPTY_DIGITAL_SIGNALS == 1 %}
+                        w3-red                           
+                    {% else %}
+                        w3-theme-l4
+                    {% endif %}
+                    " type="submit">
+                    Да
+                </button>
+                <button name="del_empty_digital_signals" value="0" class="w3-button w3-quarter
+                    {% if DELETE_EMPTY_DIGITAL_SIGNALS == 0 %}
+                        w3-green
+                    {% else %}
+                        w3-theme-l4
+                    {% endif %}
+                    " type="submit">
+                    Нет
+                </button>
+            </div>
+            <p></p>
+            <div class="w3-container w3-card"  style="padding: 0">
+                <div class="w3-container w3-center w3-half w3-padding">
+                    Качество картинок осцилограмм:
+                </div>
+                <input class="w3-input w3-border w3-border-theme w3-round w3-col s2 " name="dpi" type="text" style="text-align: right;" autocomplete="off" value="{{IMAGE_DPI}}">
+                <div class="w3-col s1 w3-container w3-left w3-padding">dpi</div>
+                <button style="padding-bottom: 10px" class="w3-button w3-quarter w3-theme-l4" name="fix" value="0" type="submit">
+                    Set
+                </button>
+            </div>
+            <p></p>
+            <div class="w3-container w3-card" style="padding: 0">
+                <div class="w3-container w3-center w3-half w3-padding">
+                    Включить прозрачный фон каринок?
+                </div>
+                <button name="image_transparent" value="1" 
+                    class="w3-button w3-quarter 
+                    {% if IMAGE_TRANSPARENT == 1 %}
+                        w3-red                           
+                    {% else %}
+                        w3-theme-l4
+                    {% endif %}
+                    " type="submit">
+                    Да
+                </button>
+                <button name="image_transparent" value="0" class="w3-button w3-quarter
+                    {% if IMAGE_TRANSPARENT == 0 %}
+                        w3-green
+                    {% else %}
+                        w3-theme-l4
+                    {% endif %}
+                    " type="submit">
+                    Нет
+                </button>
+            </div>
+            <p></p>
+            <div class="w3-container w3-card"  style="padding: 0">
+                <div class="w3-container w3-center w3-half w3-padding">
+                    Начало нумерации рисунков:
+                </div>
+                <input class="w3-input w3-border w3-border-theme w3-round w3-col s3 " name="num_start" type="text" style="text-align: right;" autocomplete="off" value="{{NUM_START}}">
+                <button style="padding-bottom: 10px" class="w3-button w3-quarter w3-theme-l4" name="fix" value="0" type="submit">
+                    Set
+                </button>
+            </div>
+            <p></p>
         </div>
 </div>
 </form>

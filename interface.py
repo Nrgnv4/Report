@@ -41,14 +41,17 @@ def index():
         **sett
     )
 
+
 @app.route('/protocol_template', methods=['POST', 'GET'])
 def make_protocol():
     json = main.Helper().load_json('tree.tmp')
+    main.make_protocol()
     return render_template(
         'protocol_template.html',
         tree=json,
         title='Протокол'
     )
+
 
 @app.route('/tree', methods=['POST', 'GET'])
 def tree():
