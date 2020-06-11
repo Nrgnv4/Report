@@ -45,7 +45,7 @@ def index():
 @app.route('/protocol_template', methods=['POST', 'GET'])
 def make_protocol():
     json = main.Helper().load_json('tree.tmp')
-    main.make_protocol()
+    make_protocol()
     return render_template(
         'protocol_template.html',
         tree=json,
@@ -84,10 +84,23 @@ def scopes():
         title='Шаг 3: Создание картинок осциллограмм'
     )
 
+
 @app.route('/protocol', methods=['POST', 'GET'])
 def protocol():
+    if request.method == 'POST':
+        main.make_protocol()
     return render_template(
         'protocol.html',
+        title='Шаг 4: Создание протокола'
+    )
+
+
+@app.route('/protocol_download', methods=['POST', 'GET'])
+def protocol_download():
+    if request.method == 'POST':
+        main.make_protocol()
+    return render_template(
+        'protocol_download.html',
         title='Шаг 4: Создание протокола'
     )
 
