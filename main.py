@@ -603,7 +603,7 @@ class Tree():
 
         # обработка переходов
         if test == 'переходы':
-            jump = re.search(fr'(?:\d+_)*(\w+\d\b\s*(-\s*\w+\d\b)+)',
+            jump = re.search(fr'(?:\d+_)*(\w+\d*\b\s*(-\s*\w+\d*\b)+)',
                              path, flags=re.IGNORECASE)
             regulator = jump[1]
             channel = ''
