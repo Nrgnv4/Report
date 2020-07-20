@@ -575,6 +575,7 @@ class Tree():
 
     def get_all_params_from_path(self, path):
         upper_path = path.upper()
+        source = ''
 
         def check_in_path(type_):
             for i in self.standard_settings[type_]:
@@ -608,6 +609,17 @@ class Tree():
             regulator = jump[1]
             channel = ''
 
+        # обработка Неуспешного НВ
+        if test == 'Неуспешное НВ':
+            jump = re.search(fr'(?:\d+_)*(\w+)(\d)\b\s*([~=])\s*',
+                             path, flags=re.IGNORECASE)
+            regulator = jump[1]
+            channel = jump[2]
+            if jump[3] == "~":
+                source = "от источника переменного тока"
+            if jump[3] == "=":
+                source = "от источника постоянного тока"
+
         # определение амплитуды толчка
         pulse = re.search(r'[+,-]\d+%(?:\s*\D+\b)*[$]*', path)
         if pulse:
@@ -615,7 +627,7 @@ class Tree():
         else:
             pulse = ''
 
-        # определение длиельности толчка
+        # определение длительности толчка
         pulse_time = re.search(r'\d+\s*(сек|sec)', path)
         if pulse_time:
             pulse_time = pulse_time[0]
@@ -654,6 +666,7 @@ class Tree():
             'pulse': pulse,
             'pulse_time': pulse_time,
             'tunes': tunes,
+            'source': source,
             'set_': set_
         }
 
@@ -737,6 +750,7 @@ class Tree():
         return [change_str(i) for i in data_list]
 
     def signature(self, parameters):
+        source = parameters['source']
 
         replacements = self.standard_settings['replacements']
 
