@@ -610,8 +610,8 @@ class Tree():
             channel = ''
 
         # обработка Неуспешного НВ
-        if test == 'Неуспешное НВ':
-            jump = re.search(fr'(?:\d+_)*(\w+)(\d)\b\s*([~=])\s*',
+        if 'НВ' in test:
+            jump = re.search(fr'(?:\d+_)*(\w+)(\d)\b\s*([~=])*\s*',
                              path, flags=re.IGNORECASE)
             regulator = jump[1]
             channel = jump[2]
@@ -619,6 +619,7 @@ class Tree():
                 source = "от источника переменного тока"
             if jump[3] == "=":
                 source = "от источника постоянного тока"
+
 
         # определение амплитуды толчка
         pulse = re.search(r'[+,-]\d+%(?:\s*\D+\b)*[$]*', path)
