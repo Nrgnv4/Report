@@ -113,7 +113,7 @@ class Scope():
             comtrade = ComtradeRecord(path_to_file)
             comtrade.ReadDataFile()
             self.comtrade = comtrade
-            self.analogs = comtrade.signals['Analog']
+            self.analogs = {i:j.rstrip() for i,j in comtrade.signals['Analog'].items()}
             self.digitals = comtrade.signals['Digital']
             self.time = comtrade.getTime()
             if self.global_settings['DELETE_EMPTY_DIGITAL_SIGNALS']:
