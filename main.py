@@ -70,7 +70,7 @@ class Csv():
 class Scope():
     """docstring for Scope"""
 
-    def __init__(self, choice, path_to_file):
+    def __init__(self, choice, path_to_file, convert_to_csv = False):
         self.choice = choice
 
         # чтение настроек
@@ -79,30 +79,35 @@ class Scope():
         # получение времени, анaлоговых и дискретных сигналов из файла
         self.get_data_from_file(path_to_file)
 
-        # преобразование словаря имен и номеров аналоговых сигналов
-        self.transform_analogs_names()
+        if convert_to_csv:
+            # преобразование в Csv
+            self.convert_to_csv(path_to_file)
+        else:
+            # преобразование словаря имен и номеров аналоговых сигналов
+            self.transform_analogs_names()
 
-        # формирование выбранных сигналов self.choosen_signals
-        self.analogs_select(choice)
+            # формирование выбранных сигналов self.choosen_signals
+            self.analogs_select(choice)
 
-        # формирование макета осциллограммы
-        self.prepare_figure()
+            # формирование макета осциллограммы
+            self.prepare_figure()
 
-        # формирование и размещение на макете всех сигналов
-        self.add_analogs()
-        if self.comtrade:
-            self.add_digitals()
+            # формирование и размещение на макете всех сигналов
+            self.add_analogs()
+            if self.comtrade:
+                self.add_digitals()
 
-        # добавление подписи по "y"
-        plt.xlabel('t,сек', fontsize=7, rotation=0)
+            # добавление подписи по "y"
+            plt.xlabel('t,сек', fontsize=7, rotation=0)
 
-        # plt.savefig(f'{path_to_save}{s.IMAGE_FILENAME}',
-        #     transparent=self.global_settings['IMAGE_TRANSPARENT'])
+            # plt.savefig(f'{path_to_save}{s.IMAGE_FILENAME}',
+            #     transparent=self.global_settings['IMAGE_TRANSPARENT'])
 
-        # сохранение файла в png
-        plt.savefig(path_to_file[:-3],
-                    transparent=self.global_settings['IMAGE_TRANSPARENT'])
-        plt.close()
+            # сохранение файла в png
+            plt.savefig(path_to_file[:-3],
+                        transparent=self.global_settings['IMAGE_TRANSPARENT'])
+            plt.close()
+
 
     def get_data_from_file(self, path_to_file):
         """В зависимости от типа файла получает сигналы из файла
@@ -131,6 +136,24 @@ class Scope():
             return self.comtrade.getAnalogChannelData(channel)
         if self.csv:
             return self.csv.get_channel(channel)
+
+    def convert_to_csv(self, path_to_file):
+        import numpy as np
+        import pandas as pd 
+        first_row = ['time']
+        first_row.extend(self.analogs.values())
+        first_row = np.array(first_row)
+        data = []
+        [data.append(self.analog_data(key)) for key in self.analogs.keys()]
+        data = np.hstack((data))
+        data = np.hstack((self.time.reshape(-1, 1), data))
+        data = np.vstack((first_row, data))
+        df = pd.DataFrame(data)
+        df.to_csv(path_to_file[:-3]+'csv', 
+            encoding="cp1251", sep=';', float_format='%.3f', decimal=",", header=False, index=False)
+
+
+
 
     def prepare_figure(self):
         """ Формирует макет осциллограммы.
@@ -815,14 +838,8 @@ def make_protocol():
 def main():
 
     # Scope(choice, './static/Испытания/1_ХХ/4_Ограничители/1_AVR2 ОМТВВ +10% 6 сек T652=0,33/avr92log575_V829.cfg')
-    # Scope(choice,'./avr92log567_V829.cfg')
-    # Tree()
-    # Protocol()
-    # a = Tree().tmp()
-    # for i in a:
-    #     Analysis(i)
-    # Analysis('Испытания/3_сеть 300 МВт/2_Толчки/1_АРВ1 pss off +3% 6 сек')
-    make_protocol()
+    a = Scope(choice,'./LOG200718124920007.cfg', True)
+    # make_protocol()
 
 
 if __name__ == '__main__':
