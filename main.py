@@ -52,7 +52,7 @@ class Csv():
         key = 0
         for signal in self.data[0][1:]:
             key += 1
-            self.signals.update({key: signal})
+            self.signals.update({key: signal.strip()})
 
     def line_split(self, line):
         a = line.split(';')
@@ -599,6 +599,7 @@ class Tree():
     def get_all_params_from_path(self, path):
         upper_path = path.upper()
         source = ''
+        replace = ''
 
         def check_in_path(type_):
             for i in self.standard_settings[type_]:
@@ -627,9 +628,10 @@ class Tree():
 
         # обработка переходов
         if test == 'переходы':
-            jump = re.search(fr'(?:\d+_)*(\w+\d*\b\s*(-\s*\w+\d*\b)+)',
+            jump = re.search(fr'(?:\d+_)*(\w+\d*\b\s*(-\s*\w+\d*\b)+)(\s(.*))*',
                              path, flags=re.IGNORECASE)
             regulator = jump[1]
+            replace = jump[4]
             channel = ''
 
         # обработка Неуспешного НВ
@@ -659,7 +661,7 @@ class Tree():
             pulse_time = ''
 
         # определение параметров, записанных в пути
-        tunes = re.findall(r'[TТ]\d+\s*\w+?\s*=\s*[\d,]+', path)
+        tunes = re.findall(r'[TТV]\d+\s*\w+?\s*=\s*[\d,]+', path)
 
         def add_tunes_name(parameter):
             p_list = parameter.split('=')
@@ -691,6 +693,7 @@ class Tree():
             'pulse_time': pulse_time,
             'tunes': tunes,
             'source': source,
+            'replace': replace,
             'set_': set_
         }
 
@@ -778,7 +781,17 @@ class Tree():
 
         replacements = self.standard_settings['replacements']
 
-        regulator = replacements[parameters['regulator']]
+        try:
+            regulator = replacements[parameters['regulator']]
+        except:
+            regulator = parameters['regulator']
+
+        try:
+            replace = replacements[parameters['replace']]
+            replace = ' ' + replace
+        except:
+            replace = ''
+
         test = f"f\"{replacements[parameters['test']]}\""
         channel = parameters['channel']
         pulse = parameters['pulse']
@@ -798,7 +811,7 @@ class Tree():
             pulse_time = ""
 
         if parameters['tunes']:
-            tunes = ", ".join(parameters['tunes'])
+            tunes = " "+", ".join(parameters['tunes'])
         else:
             tunes = ""
 
@@ -838,8 +851,10 @@ def make_protocol():
 def main():
 
     # Scope(choice, './static/Испытания/1_ХХ/4_Ограничители/1_AVR2 ОМТВВ +10% 6 сек T652=0,33/avr92log575_V829.cfg')
-    a = Scope(choice,'./LOG200718124920007.cfg', True)
+    # a = Scope(choice,'./LOG200718124920007.cfg', True)
     # make_protocol()
+    pass
+
 
 
 if __name__ == '__main__':
