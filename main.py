@@ -822,8 +822,6 @@ class Tree():
 
         body = f"Рисунок {self.num} - {eval(test)}{set_}"
 
-        # print(body,parameters)
-
         self.num += 1
 
         return body
@@ -850,9 +848,6 @@ def make_protocol():
 
 def main():
 
-    # Scope(choice, './static/Испытания/1_ХХ/4_Ограничители/1_AVR2 ОМТВВ +10% 6 сек T652=0,33/avr92log575_V829.cfg')
-    # a = Scope(choice,'./LOG200718124920007.cfg', True)
-    # make_protocol()
     pass
 
 
@@ -860,35 +855,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-"""
-
-# fig = plt.figure(constrained_layout=True, figsize=plt.figaspect(1))
-fig = plt.figure(dpi=200)
-fig.subplots_adjust(top=0.95, bottom=0.02, left=0.23, right=0.99)
-
-gs = fig.add_gridspec(12, 1, hspace=0.01)
-ax1 = fig.add_subplot(gs[0:3,0])
-ax1.set_xticklabels('')
-ax1.tick_params(axis='y', labelsize=6)
-ax1.plot(time, AnalogChannelData1,linewidth=0.8)
-ax1.plot(time, AnalogChannelData3,linewidth=0.8,ls='--')
-# ax1.set(title='An Example Axes',  ylabel=f"{comtradeObj.signals['Digital'][0].keys()}")
-plt.ylabel(f"North", fontsize=8, rotation=0, horizontalalignment='right')
-ax1.grid()
-
-ax2 = fig.add_subplot(gs[3:6,0],sharex=ax1)
-ax2.plot(time, AnalogChannelData2,linewidth=0.8)
-ax2.tick_params(axis='y', labelsize=6)
-plt.ylabel("North ", fontsize=8, rotation=0, horizontalalignment='right')
-ax2.grid()
-
-ax3 = fig.add_subplot(gs[6,:],ylim=[-0.1,1.2])
-ax3.plot(time, DigitalChannelData, linewidth=0.8)
-ax3.tick_params(axis='both', labelsize=6)
-plt.ylabel(f"C16 Асимметрия токов ТП", fontsize=6,
-           rotation=0, horizontalalignment='right')
-ax3.grid()
-
-plt.savefig('foo.png', transparent=False)
-plt.show()
-"""
